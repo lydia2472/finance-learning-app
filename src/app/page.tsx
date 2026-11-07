@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useProgress } from "@/hooks/useProgress";
 import { useBookmarks } from "@/hooks/useBookmarks";
+import { useLang } from "@/hooks/useLang";
 import {
   stage1,
   stage2,
@@ -30,6 +31,7 @@ function StageBlock({
   stage: Stage;
   completed: number[];
 }) {
+  const { t, lang } = useLang();
   const done = stage.lessons.filter((l) => completed.includes(l.id)).length;
   const pct = Math.round((done / stage.lessons.length) * 100);
   return (
@@ -42,7 +44,7 @@ function StageBlock({
           </div>
           <div className="text-right">
             <div className="text-2xl font-bold text-emerald-600">{done} / {stage.lessons.length}</div>
-            <div className="text-xs text-stone-400">已完成</div>
+            <div className="text-xs text-stone-400">{t.completed}</div>
           </div>
         </div>
         <div className="mt-4 h-3 overflow-hidden rounded-full bg-stone-100">
@@ -106,6 +108,7 @@ function LessonGrid({
 export default function Home() {
   const { progress, ready } = useProgress();
   const { bookmarks } = useBookmarks();
+  const { t, lang } = useLang();
   const doneCount8 = stage8.lessons.filter((l) =>
     progress.completed.includes(l.id)
   ).length;
@@ -113,7 +116,7 @@ export default function Home() {
   const next = allLessons.find((l) => !progress.completed.includes(l.id)) ?? null;
 
   if (!ready) {
-    return <div className="py-24 text-center text-stone-400">加载中…</div>;
+    return <div className="py-24 text-center text-stone-400">{t.loading}</div>;
   }
 
   return (
@@ -122,12 +125,11 @@ export default function Home() {
       <section>
         {next ? (
           <div className="rounded-3xl bg-gradient-to-br from-emerald-600 to-emerald-800 p-8 text-white shadow-lg">
-            <p className="text-sm font-medium tracking-wide text-emerald-100">今日一课 · 每天 5-10 分钟</p>
+            <p className="text-sm font-medium tracking-wide text-emerald-100">{t.todayLesson} · {t.perDay}</p>
             <h1 className="mt-2 text-3xl font-bold leading-snug">
-              第 {next.id} 课 · {next.title}
+              {lang === "zh" ? `第 ${next.id} 课 · ${next.title}` : `Lesson ${next.id} · ${next.titleEn || next.title}`}
             </h1>
-            <p className="mt-1 text-emerald-100">{next.titleEn}</p>
-            <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-emerald-50">{next.intro}</p>
+            <p className="mt-1 text-emerald-100">{lang === "zh" ? next.intro : next.titleEn}</p>
             <div className="mt-4 flex items-center gap-3 text-sm text-emerald-100">
               <span>{Stars(next.difficulty)}</span>
               <span>约 {next.minutes} 分钟</span>
@@ -136,7 +138,7 @@ export default function Home() {
               href={`/lesson/${next.id}`}
               className="mt-6 inline-block rounded-xl bg-white px-8 py-3 font-semibold text-emerald-700 shadow transition hover:bg-emerald-50"
             >
-              开始学习 →
+              {t.startLearning} →
             </Link>
           </div>
         ) : (
@@ -162,9 +164,9 @@ export default function Home() {
       {bookmarks.length > 0 && (
         <section>
           <h2 className="mb-3 flex items-center gap-2 font-bold text-amber-700">
-            <span>⭐ 我的收藏</span>
+            <span>⭐ {t.myBookmarks}</span>
             <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium">
-              {bookmarks.length} 课
+              {bookmarks.length} {t.units}
             </span>
           </h2>
           <ol className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -266,7 +268,7 @@ export default function Home() {
           </div>
           <div className="text-right">
             <div className="text-2xl font-bold text-indigo-700">{doneCount8} / {stage8.lessons.length}</div>
-            <div className="text-xs text-stone-400">已完成</div>
+            <div className="text-xs text-stone-400">{t.completed}</div>
           </div>
         </div>
         <div className="mt-4 h-3 overflow-hidden rounded-full bg-white">

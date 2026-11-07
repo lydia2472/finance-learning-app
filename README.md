@@ -1,161 +1,162 @@
-# 每日金融一课 📚
+# Daily Finance 📚
 
-从金融小白到投资能手的完整学习系统。
+A complete learning system that takes you from finance beginner to confident investor.
 
-## 功能
+**[中文说明](README_CN.md)**
 
-- **175 课完整课程**：主线 7 阶段 + CFA 进阶选修
-  - 阶段 1：金钱观与理财启蒙（复利、通胀、预算、应急基金）
-  - 阶段 2：个人财务底盘（信用、债务、房贷、换汇、税务）
-  - 阶段 3：保障先行（四类保险、社保、防骗与维权）
-  - 阶段 4：认识投资世界（股票、债券、基金、ETF、资产配置）
-  - 阶段 5：基金与指数实战（定投、估值、费率、投资计划书）
-  - 阶段 6：宏观与行为金融（央行、经济周期、行为偏差）
-  - 阶段 7：长期财富管理（退休、传承、财务自由）
-  - 进阶选修：小白话讲 CFA 一级（25 课）
-- **互动测验**：每课 3 道题，即时反馈与解析
-- **学习进度追踪**：打卡连胜、阶段进度、收藏功能
-- **CFA 进阶中心**：知识地图、三级体系、备考进度追踪、报考实务
-- **每日财经简报**：五分类新闻（国际政治/宏观央行/国内政策/市场行情/AI 科技）+ 「为什么和你的钱包有关」解读 + 关联课程链接
-- **持仓工具**：资产分布诊断、历史风险参考（Wind 数据）、情景推演（非预测）
-- **AI 助教**：基于课程内容的智能问答（本地 Ollama / OpenAI 兼容 API）
+## Features
 
-## 安装与运行
+- **175 Complete Lessons**: 7 main stages + CFA elective track
+  - Stage 1: Money Mindset & Financial Awakening (compound interest, inflation, budgeting, emergency fund)
+  - Stage 2: Personal Financial Foundation (credit, debt, mortgage, currency exchange, taxes)
+  - Stage 3: Protection First (four types of insurance, social security, fraud prevention)
+  - Stage 4: Understanding Investment Tools (stocks, bonds, funds, ETFs, asset allocation)
+  - Stage 5: Fund & Index Investing in Practice (DCA, valuation, fees, investment policy statement)
+  - Stage 6: Macro & Behavioral Finance (central banks, economic cycles, behavioral biases)
+  - Stage 7: Long-Term Wealth Management (retirement, estate planning, financial independence)
+  - Elective: CFA Level I in Plain Language (25 lessons)
+- **Interactive Quizzes**: 3 questions per lesson with instant feedback and explanations
+- **Progress Tracking**: Daily streaks, stage progress, bookmarking
+- **CFA Study Center**: Knowledge map, 3-level system, exam prep tracker, registration guide
+- **Daily Financial Briefing**: 5-category news (Geopolitics / Macro & Central Banks / China Policy / Markets / AI Tech) with "Why it matters for your wallet" analysis + linked course lessons
+- **Portfolio Tool**: Asset allocation diagnostics, historical risk reference (Wind data), scenario projections (not predictions)
+- **AI Tutor**: Ask questions about any lesson, answered based on course content (local Ollama or any OpenAI-compatible API)
 
-### 前置要求
+## Installation & Setup
 
-| 软件 | 版本要求 | 检查命令 | 下载地址 |
-|------|---------|---------|---------|
+### Prerequisites
+
+| Software | Version | Check | Download |
+|----------|---------|-------|----------|
 | Node.js | ≥ 18.18 | `node -v` | [nodejs.org](https://nodejs.org) |
-| npm | ≥ 9 | `npm -v` | 随 Node.js 安装 |
+| npm | ≥ 9 | `npm -v` | Included with Node.js |
 
-### 方式一：从 GitHub 克隆（推荐）
+### Step 1: Clone and Install
 
 ```bash
-# 1. 克隆仓库
+# Clone the repository
 git clone https://github.com/lydia2472/finance-learning-app.git
 cd finance-learning-app
 
-# 2. 安装依赖
+# Install dependencies
 npm install
 
-# 3. 启动开发模式（适合开发调试，支持热更新）
+# If npm is slow in your region, use a mirror:
+# npm install --registry=https://registry.npmmirror.com
+```
+
+### Step 2: Run the App
+
+**Option A: Development mode (hot reload, best for development)**
+```bash
 npm run dev
 ```
+Open `http://localhost:3000` in your browser.
 
-启动后浏览器打开 `http://localhost:3000`
-
-### 方式二：生产模式运行（性能更好）
-
+**Option B: Production mode (better performance)**
 ```bash
-# 构建生产版本
 npm run build
-
-# 启动生产服务器
 npm start
 ```
+Open `http://localhost:3000` in your browser.
 
-启动后浏览器打开 `http://localhost:3000`
+### Troubleshooting
 
-### 常见问题
-
-**Q: `npm install` 很慢或失败？**
+**Q: `npm install` fails or is very slow?**
 ```bash
-# 使用国内镜像
 npm install --registry=https://registry.npmmirror.com
 ```
 
-**Q: `npm run dev` 报 Node 版本不够？**
-
-用 nvm 升级 Node：
+**Q: Node.js version is too old?**
 ```bash
-brew install nvm          # macOS
-nvm install 22            # 安装 Node 22
-nvm use 22                # 切换版本
-node -v                   # 确认 ≥ 18.18
+# Using nvm (Node Version Manager)
+brew install nvm
+nvm install 22
+nvm use 22
+node -v  # Should show v22.x.x
 ```
 
-**Q: 页面打开是空白的？**
-- 确认终端没有报错
-- 尝试强制刷新（`⌘+Shift+R` / `Ctrl+Shift+R`）
-- 清除浏览器缓存后重试
+**Q: Page loads blank?**
+- Check the terminal for errors
+- Hard refresh: `⌘+Shift+R` (Mac) or `Ctrl+Shift+R` (Windows)
+- Clear browser cache and retry
 
-## 启用 AI 助教（可选，但强烈推荐）
+## Enabling the AI Tutor (Optional, Highly Recommended)
 
-AI 助教让你在学习任何一课时可以直接提问，AI 会基于当前课程内容回答。
+The AI Tutor lets you ask questions about any lesson you're studying. It answers based on the current lesson's content.
 
-### 方式一：本地 Ollama（免费，推荐）
+### Option 1: Local Ollama (Free, Recommended)
 
 ```bash
-# 1. 安装 Ollama
+# 1. Install Ollama
 brew install ollama
 
-# 2. 启动服务（设为开机自启）
+# 2. Start the service (auto-starts on login)
 brew services start ollama
 
-# 3. 下载中文模型（约 4.7GB，需几分钟）
+# 3. Download a Chinese-capable model (~4.7GB, takes a few minutes)
 ollama pull qwen2.5:7b
 
-# 4. 验证安装成功
+# 4. Verify installation
 ollama list
-# 应显示：qwen2.5:7b    ...    4.7 GB
+# Should show: qwen2.5:7b    ...    4.7 GB
 ```
 
-安装完成后，打开任何课程 → 点击右下角 💬 按钮 → 输入问题即可。默认配置已指向本地 Ollama，无需额外设置。
+Once installed, open any lesson → click the 💬 button (bottom-right) → type your question. The default configuration points to local Ollama—no extra setup needed.
 
-> ⚠️ 如果你有 VPN/代理软件，下载模型时可能被拦截。请暂时关闭代理，下载完后再开启。
+> ⚠️ If you use a VPN/proxy, the model download may be blocked. Temporarily disable your proxy during download, then re-enable afterward.
 
-### 方式二：云端 API（如 DeepSeek）
+### Option 2: Cloud API
 
-| 提供商 | Base URL | 模型名 | 注册地址 |
-|--------|----------|--------|---------|
+| Provider | Base URL | Model Name | Sign Up |
+|----------|----------|------------|---------|
 | DeepSeek | `https://api.deepseek.com/v1` | `deepseek-chat` | [platform.deepseek.com](https://platform.deepseek.com) |
-| 智谱 AI | `https://open.bigmodel.cn/api/paas/v4` | `glm-4-flash` | [open.bigmodel.cn](https://open.bigmodel.cn) |
+| Zhipu AI | `https://open.bigmodel.cn/api/paas/v4` | `glm-4-flash` | [open.bigmodel.cn](https://open.bigmodel.cn) |
 | OpenAI | `https://api.openai.com/v1` | `gpt-4o-mini` | [platform.openai.com](https://platform.openai.com) |
 
-获取 API Key 后：打开课程 → 💬 → ⚙️ 设置 → 填入 Base URL / 模型名 / API Key → 保存
+After getting an API key: Open a lesson → 💬 → ⚙️ Settings → enter Base URL / Model / API Key → Save
 
-## 使用指南
+## User Guide
 
-| 页面 | 功能 | 入口 |
-|------|------|------|
-| 首页 | 今日一课、进度总览、收藏列表 | 顶部导航 |
-| 课程页 | 概念讲解 + 例子 + 测验 + AI 助教 | 点击课程卡片 |
-| 新闻简报 | 每日五分类财经要闻 + 市场快照 | 顶部「新闻简报」 |
-| 持仓工具 | 录入持仓、诊断结构、情景推演 | 顶部「持仓」 |
-| CFA 进阶 | 知识地图、备考追踪 | 顶部「CFA 进阶」 |
+| Page | Features | Access |
+|------|----------|--------|
+| Home | Today's lesson, progress overview, bookmarks | Top navigation |
+| Lesson | Concept + Example + Quiz + AI Tutor | Click any lesson card |
+| News Briefing | Daily 5-category news + Market snapshot | "News" in navigation |
+| Portfolio | Holdings input, allocation diagnostics, projections | "Portfolio" in navigation |
+| CFA Center | Knowledge map, exam prep tracker | "CFA" in navigation |
 
-## 项目结构
+## Project Structure
 
 ```
 finance-learning-app/
 ├── src/
-│   ├── app/              # Next.js 页面路由
-│   │   ├── page.tsx      # 首页
-│   │   ├── lesson/[id]/  # 课程页
-│   │   ├── news/         # 每日简报
-│   │   ├── portfolio/    # 持仓工具
-│   │   ├── cfa-map/      # CFA 进阶中心
-│   │   └── api/chat/     # AI 助教后端
-│   ├── components/       # UI 组件
-│   ├── data/             # 课程内容与市场数据
-│   └── hooks/            # 进度/收藏状态管理
+│   ├── app/              # Next.js page routes
+│   │   ├── page.tsx      # Home page
+│   │   ├── lesson/[id]/  # Lesson pages
+│   │   ├── news/         # Daily briefing
+│   │   ├── portfolio/    # Portfolio tool
+│   │   ├── cfa-map/      # CFA study center
+│   │   └── api/chat/     # AI Tutor backend
+│   ├── components/       # UI components
+│   ├── data/             # Course content & market data
+│   └── hooks/            # Progress/bookmark state management
 ├── package.json
 └── README.md
 ```
 
-## 数据来源
+## Data Sources
 
-| 数据 | 来源 | 说明 |
-|------|------|------|
-| 课程内容 | 自研（参考 SEC/CFPB/Khan Academy 公共领域框架） | AI 辅助创作 + 人工审核 |
-| 市场行情 | Wind | 指数涨跌幅、PE 估值、历史 K 线 |
-| 每日新闻 | 多源检索 + CNN Business + Wind | AI 检索生成，附原文链接 |
+| Data | Source | Notes |
+|------|--------|-------|
+| Course content | Original (based on SEC/CFPB/Khan Academy public domain frameworks) | AI-assisted + human-reviewed |
+| Market data | Wind | Index quotes, PE valuations, historical K-lines |
+| Daily news | Multi-source + CNN Business + Wind | AI-generated with source links |
 
-## 免责声明
+## Disclaimer
 
-本产品全部内容仅为投资者教育与知识普及之目的，**不构成任何投资建议**，亦不构成对任何证券、基金等金融产品的推荐。据此操作，风险自担。历史数据与情景推演均不代表未来。详见 App 内「来源与声明」页。
+All content in this product is for investor education and financial literacy purposes only. It does **not constitute investment advice** or a recommendation of any security, fund, or financial product. Past performance and scenario projections do not guarantee future results. See the "Sources & Disclaimer" page within the app for details.
 
 ## License
 
-MIT（课程内容仅供个人学习使用）
+MIT (Course content is for personal learning use only)
