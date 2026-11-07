@@ -10,12 +10,14 @@ import { getLesson, stageOf, allLessons } from "@/data/lessons";
 import { lessonCfaMap, topicName } from "@/data/cfa";
 import { useProgress } from "@/hooks/useProgress";
 import { useBookmarks } from "@/hooks/useBookmarks";
+import { useLang } from "@/hooks/useLang";
 
 export default function LessonPage() {
   const params = useParams<{ id: string }>();
   const id = Number(Array.isArray(params?.id) ? params.id[0] : params?.id);
   const lesson = getLesson(id);
   const { isCompleted, completeLesson } = useProgress();
+  const { t, lang } = useLang();
   const [alreadyDone, setAlreadyDone] = useState(false);
 
   // hydration 安全：等本地进度读取完成后再判断
@@ -28,7 +30,7 @@ export default function LessonPage() {
       <div className="py-24 text-center">
         <p className="text-stone-500">没有找到这一课。</p>
         <Link href="/" className="mt-4 inline-block text-emerald-600 underline">
-          返回首页
+          {t.prevPage}
         </Link>
       </div>
     );
@@ -46,14 +48,14 @@ export default function LessonPage() {
       {/* 课头 */}
       <header>
         <Link href="/" className="text-sm text-stone-400 transition hover:text-stone-600">
-          ← 返回课程列表
+          ← {t.backToList}
         </Link>
         <div className="mt-3">
           <p className="text-sm font-medium text-emerald-700">
-            阶段 {stage.no} · {stage.name}
+            {lang === "zh" ? `阶段 ${stage.no} · ${stage.name}` : `Stage ${stage.no} · ${lesson.titleEn}`}
             {alreadyDone && (
               <span className="ml-2 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
-                已完成
+                {t.completed}
               </span>
             )}
             <button
@@ -63,16 +65,16 @@ export default function LessonPage() {
                   ? "bg-amber-100 text-amber-700 hover:bg-amber-200"
                   : "bg-stone-100 text-stone-500 hover:bg-amber-50 hover:text-amber-600"
               }`}
-              title={bookmarked ? "取消收藏" : "收藏此课"}
+              title={bookmarked ? (lang === "zh" ? "取消收藏" : "Remove bookmark") : (lang === "zh" ? "收藏此课" : "Bookmark this lesson")}
             >
-              {bookmarked ? "★ 已收藏" : "☆ 收藏"}
+              {bookmarked ? `★ ${t.bookmarked}` : `☆ ${t.bookmark}`}
             </button>
           </p>
           <h1 className="mt-2 text-2xl font-bold leading-snug sm:text-3xl">
-            第 {lesson.id} 课 · {lesson.title}
+            {lang === "zh" ? `第 ${lesson.id} 课 · ${lesson.title}` : `Lesson ${lesson.id} · ${lesson.titleEn}`}
           </h1>
           <p className="mt-1 text-sm text-stone-400">
-            {lesson.titleEn} · {stars} · 约 {lesson.minutes} 分钟
+            {lang === "zh" ? lesson.titleEn : lesson.title} · {stars} · {lesson.minutes} {t.minutes}
           </p>
           {(lessonCfaMap[lesson.id] ?? []).length > 0 && (
             <div className="mt-2.5 flex flex-wrap gap-1.5">
@@ -95,7 +97,7 @@ export default function LessonPage() {
       <section>
         <h2 className="mb-3 flex items-center gap-2 text-lg font-bold">
           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-600 text-sm text-white">1</span>
-          概念讲解
+          {t.conceptSection}
         </h2>
         <div className="rounded-2xl border border-stone-200 bg-white p-6">
           <Markdown
@@ -109,7 +111,7 @@ export default function LessonPage() {
       <section>
         <h2 className="mb-3 flex items-center gap-2 text-lg font-bold">
           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-600 text-sm text-white">2</span>
-          举个例子
+          {t.exampleSection}
         </h2>
         <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-6">
           <Markdown
@@ -123,7 +125,7 @@ export default function LessonPage() {
       <section>
         <h2 className="mb-3 flex items-center gap-2 text-lg font-bold">
           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-600 text-sm text-white">3</span>
-          小测验
+          {t.quizSection}
         </h2>
         <Quiz
           items={lesson.quiz}
@@ -136,7 +138,7 @@ export default function LessonPage() {
 
       {/* 延伸阅读 */}
       <section className="rounded-2xl border border-stone-200 bg-white p-6">
-        <h2 className="mb-3 text-sm font-bold text-stone-500">延伸阅读（权威来源）</h2>
+        <h2 className="mb-3 text-sm font-bold text-stone-500">{t.furtherReading}</h2>
         <ul className="space-y-2">
           {lesson.sources.map((s) => (
             <li key={s.url}>
@@ -162,18 +164,18 @@ export default function LessonPage() {
           href="/"
           className="rounded-xl border border-stone-300 px-5 py-2.5 text-sm font-medium text-stone-600 transition hover:bg-white"
         >
-          返回首页
+          {t.prevPage}
         </Link>
         {nextLesson ? (
           <Link
             href={`/lesson/${nextLesson.id}`}
             className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
           >
-            下一课：第 {nextLesson.id} 课 {nextLesson.title} →
+            {lang === "zh" ? `下一课：第 ${nextLesson.id} 课 ${nextLesson.title} →` : `Next: Lesson ${nextLesson.id} ${nextLesson.titleEn} →`}
           </Link>
         ) : (
           <span className="rounded-xl bg-amber-100 px-5 py-2.5 text-sm font-medium text-amber-700">
-            全部课程已完成 🎉
+            {t.allDone} 🎉
           </span>
         )}
       </nav>

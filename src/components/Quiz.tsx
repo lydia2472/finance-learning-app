@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { QuizItem } from "@/data/lessons";
+import { useLang } from "@/hooks/useLang";
 
 const LETTERS = ["A", "B", "C", "D"];
 
@@ -17,6 +18,7 @@ export default function Quiz({
   const [correctCount, setCorrectCount] = useState(0);
   const [finished, setFinished] = useState(false);
   const [done, setDone] = useState(false);
+  const { t, lang } = useLang();
 
   const item = items[idx];
   const isLast = idx === items.length - 1;
@@ -40,7 +42,7 @@ export default function Quiz({
       <div className="rounded-2xl border border-stone-200 bg-white p-6 text-center">
         <div className="text-4xl">{full ? "🎉" : correctCount >= items.length / 2 ? "👍" : "💪"}</div>
         <h3 className="mt-2 text-xl font-bold">
-          答对 {correctCount} / {items.length}
+          {lang === "zh" ? `答对 ${correctCount} / ${items.length}` : `${correctCount} / ${items.length} correct`}
         </h3>
         <p className="mt-1 text-sm text-stone-500">
           {full
@@ -55,11 +57,11 @@ export default function Quiz({
             }}
             className="mt-5 rounded-xl bg-emerald-600 px-8 py-3 font-semibold text-white transition hover:bg-emerald-700"
           >
-            完成本课 ✓
+            {t.finishLesson} ✓
           </button>
         ) : (
           <p className="mt-5 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
-            本课已完成，进度已记录
+            {t.lessonCompleted}
           </p>
         )}
       </div>
@@ -71,9 +73,9 @@ export default function Quiz({
       <div className="mb-4">
         <div className="mb-2 flex items-center justify-between text-sm text-stone-500">
           <span>
-            测验 {idx + 1} / {items.length}
+            {t.quizProgress} {idx + 1} / {items.length}
           </span>
-          <span>答对 {correctCount} 题</span>
+          <span>{lang === "zh" ? `答对 ${correctCount} 题` : `${correctCount} correct`}</span>
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-stone-100">
           <div
@@ -110,7 +112,7 @@ export default function Quiz({
             correct ? "bg-emerald-50 text-emerald-800" : "bg-red-50 text-red-800"
           }`}
         >
-          <span className="font-bold">{correct ? "答对了！" : "不对哦。"}</span>{" "}
+          <span className="font-bold">{correct ? t.correct : t.wrong}</span>{" "}
           {item.explanation}
         </div>
       )}
@@ -127,7 +129,7 @@ export default function Quiz({
           }}
           className="mt-4 w-full rounded-xl bg-stone-900 py-3 font-semibold text-white transition hover:bg-stone-700"
         >
-          {isLast ? "查看结果" : "下一题 →"}
+          {isLast ? t.viewResults : t.nextQuestion}
         </button>
       )}
     </div>

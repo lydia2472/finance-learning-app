@@ -68,6 +68,7 @@ function LessonGrid({
   lessons: Lesson[];
   completed: number[];
 }) {
+  const { lang, t } = useLang();
   const nextId = lessons.find((l) => !completed.includes(l.id))?.id;
   return (
     <ol className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -92,9 +93,9 @@ function LessonGrid({
                 {isDone ? "✓" : l.id}
               </span>
               <span className="min-w-0">
-                <span className="block truncate text-[15px] font-semibold">{l.title}</span>
+                <span className="block truncate text-[15px] font-semibold">{lang === "zh" ? l.title : (l.titleEn || l.title)}</span>
                 <span className="mt-0.5 block text-xs text-stone-400">
-                  {Stars(l.difficulty)} · {l.minutes} 分钟{isNext ? " · 待学习" : ""}
+                  {Stars(l.difficulty)} · {l.minutes} {t.minutes}{isNext ? (lang === "zh" ? " · 待学习" : " · Next") : ""}
                 </span>
               </span>
             </Link>
@@ -182,9 +183,9 @@ export default function Home() {
                     <span className="text-amber-400">★</span>
                     <span className="min-w-0">
                       <span className="block truncate font-semibold text-stone-800">
-                        第 {id} 课 · {l.title}
+                        {lang === "zh" ? `第 ${id} 课 · ${l.title}` : `Lesson ${id} · ${l.titleEn || l.title}`}
                       </span>
-                      <span className="text-xs text-stone-400">{l.titleEn}</span>
+                      <span className="text-xs text-stone-400">{lang === "zh" ? l.titleEn : l.title}</span>
                     </span>
                   </Link>
                 </li>
