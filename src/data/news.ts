@@ -11,6 +11,7 @@ export type NewsCategory =
   | "macro" // 宏观经济与央行
   | "china" // 中国国内政策与经济
   | "markets" // 市场行情
+  | "ai" // AI 行业与科技
   | "industry"; // 行业与公司
 
 export type NewsItem = {
@@ -38,61 +39,165 @@ export const categoryMeta: Record<
   macro: { name: "宏观央行", chip: "bg-sky-100 text-sky-700" },
   china: { name: "国内政策", chip: "bg-amber-100 text-amber-700" },
   markets: { name: "市场行情", chip: "bg-emerald-100 text-emerald-700" },
-  industry: { name: "行业公司", chip: "bg-violet-100 text-violet-700" },
+  ai: { name: "AI 科技", chip: "bg-violet-100 text-violet-700" },
+  industry: { name: "行业公司", chip: "bg-orange-100 text-orange-700" },
 };
 
 export const editions: NewsEdition[] = [
   {
-    date: "2026-11-04",
+    date: "2026-11-07",
     headline:
-      "中国央行降息点燃 A 股大涨（中证500 +4.66%）；美国中期选举民主党夺回国会，马斯克旗下 SpaceX/Tesla 盘后重挫 4%+；Binance 遭 60 亿美元史上最大加密黑客攻击。",
+      "特斯拉宣布停产 Cybertruck；SpaceX 暴跌后强劲反弹 9.37%；美国 10 月非农新增 16.5 万超预期；A 股回落、美股企稳。",
     items: [
       {
-        title: "中国央行 11 月 4 日起降息，A 股三大指数大涨",
-        sourceName: "新浪财经",
-        sourceUrl: "https://finance.sina.com.cn",
-        fact: "央行公告自 11 月 4 日起实施降息；当日沪深300 大涨 2.31%、中证500 涨 4.66%、上证50 涨 1.45%，恒生综合涨 1.86%。",
-        why: "降息是债券和股市的双重利好——债券价格上涨（第 58 课跷跷板）、股票估值抬升（第 55 课折现率下降）。这是第 102 课的教科书演示。",
-        category: "china",
-        relatedLessons: [102, 58, 103],
-      },
-      {
-        title: "美国中期选举『蓝色浪潮』：民主党夺回国会",
-        sourceName: "CNN",
-        sourceUrl: "https://www.cnn.com",
-        fact: "民主党在中期选举中超预期表现，夺回国会控制权；选民对特朗普政府发出强烈否定信号。",
-        why: "国会分裂意味着财政刺激可能加码但预算博弈加剧——对美股短期加大波动，对债市影响取决于通胀路径（第 112/113 课周期框架）。",
-        category: "geopolitics",
-        relatedLessons: [112, 113],
-      },
-      {
-        title: "SpaceX/Tesla 因民主党胜利盘后大跌 4%+",
-        sourceName: "Bloomberg / TipRanks",
-        sourceUrl:
-          "https://www.bloomberg.com/news/articles/2026-11-04/tesla-spacex-shares-take-early-hit-as-midterm-blue-wave-unfolds",
-        fact: "民主党夺回国会后，SPCX 和 TSLA 盘后下跌超 4%；国会原定审议的 175 亿美元 SpaceX 额外政府资金面临不确定性；马斯克本轮中期选举投入约 3.66~4.74 亿美元支持共和党。",
-        why: "SpaceX 的核心收入依赖政府合同（军事+NASA）——民主党控制国会可能削减导弹防御预算、加强对马斯克的政治审查。这是第 117 课地缘政治影响市场的典型案例。",
-        category: "industry",
-        relatedLessons: [117, 54, 55],
-      },
-      {
-        title: "Binance 遭 60 亿美元史上最大加密黑客攻击",
+        title: "特斯拉宣布停产 Cybertruck",
         sourceName: "CNN Business",
         sourceUrl:
-          "https://www.cnn.com/2026/11/01/business/binance-withdrawals-crypto-heist",
-        fact: "黑客从 Binance 窃取 60 亿美元加密资产；提现已恢复，但这是加密史上最大盗窃案。",
-        why: "第 74 课的警告成真：加密资产托管风险真实存在。如果你的组合中有加密仓位，这提醒你平台安全和私钥管理的重要性。",
+          "https://www.cnn.com/2026/11/06/business/tesla-winding-down-production-of-cybertruck",
+        fact: "特斯拉即将终止 Cybertruck 的生产。这款曾被视为特斯拉增长引擎的电动皮卡，在销量持续低迷后成为公司最大的产品失败之一。",
+        why: "产品线收缩通常伴随减值和重组成本——特斯拉本周已因选举结果蒸发 4200 亿市值，Cybertruck 停产将进一步压估值。持有 TSLA 或汽车行业基金的人需要关注（第 94 课）。",
         category: "industry",
-        relatedLessons: [74, 46],
+        relatedLessons: [94, 55, 146],
       },
       {
-        title: "A 股与美股走势继续分化",
+        title: "SpaceX 暴跌后强劲反弹 9.37%",
+        sourceName: "Yahoo Finance",
+        sourceUrl:
+          "https://www.cnn.com/2026/11/05/markets/asian-markets-us-rout-ai-investment-intl-hnk",
+        fact: "SPCX 在 11 月 5 日暴跌 9.17% 后，11 月 6 日反弹 9.37% 至 $134.27；两日暴跌 12.5% 后买盘涌入，分析师认为超卖反弹叠加芯片股全线回暖。",
+        why: "V 型反转正是第 84 课微笑曲线的现实版——定投者在下跌中买入的份额此刻正在获利。但也提醒你：单日 ±9% 的波动说明 SPCX 的年化波动率远超指数（第 67 课）。",
+        category: "markets",
+        relatedLessons: [84, 67, 68],
+      },
+      {
+        title: "美国 10 月非农新增 16.5 万，失业率下降",
+        sourceName: "CNN Business",
+        sourceUrl:
+          "https://www.cnn.com/2026/11/06/economy/us-jobs-report-october",
+        fact: "美国 10 月非农就业新增 16.5 万人，失业率下降，超出市场预期；数据公布后美股芯片股反弹，费城半导体指数大涨约 500 点。",
+        why: "强劲就业=经济没那么差=企业盈利有支撑——但第 110 课的提醒：过热期强劲非农也可能是『好消息变坏消息』，因为它降低降息概率。11 月 10 日 CPI 将是关键。",
+        category: "macro",
+        relatedLessons: [110, 103, 104],
+      },
+      {
+        title: "A 股回调：沪深300 跌 1.44%，隔日跟随全球市场情绪",
         sourceName: "Wind（本站市场快照）",
         sourceUrl: "https://q.stock.sohu.com/zs/000001/index.shtml",
-        fact: "11 月 4 日收盘：A 股三大指数大涨（沪深300 +2.31%、中证500 +4.66%）；美股 11 月 3 日收盘涨跌互现（标普500 +0.36%、纳指100 +0.68%）。",
-        why: "降息驱动的 A 股反弹 vs 选举不确定性的美股观望——两地不同步正是全球配置的 Core 逻辑（第 68/90 课）。",
+        fact: "11 月 6 日收盘：上证50 −0.84%、沪深300 −1.44%、中证500 −2.13%、恒生综合 −1.63%；美股同日企稳（标普500 +0.31%、纳指100 +1.35%）。",
+        why: "A 股在前两日央行降息驱动的大涨后回落属于正常——第 84 课的定投纪律：涨了不追、跌了不停扣。全球配置者此刻的美股反弹正好对冲了 A 股回调。",
         category: "markets",
-        relatedLessons: [90, 68],
+        relatedLessons: [84, 90, 68],
+      },
+    ],
+    calendar: [
+      "11 月 10 日（周二）：美国 10 月 CPI（北京时间 20:30/21:30）——暴跌反弹后的市场走向将由这份数据定调",
+      "11 月 10 日：对华 25% 关税措施原定生效日",
+      "11 月 15 日：中国外汇存款准备金率上调正式实施",
+    ],
+  },
+  {
+    date: "2026-11-06",
+    headline:
+      "美股科技股大崩盘：纳指100 暴跌 6.36%、标普500 跌 4.36%，市值蒸发 2.5 万亿美元；马斯克帝国两日蒸发超 4200 亿；A 股逆势坚挺（中证500 +1.80%）。",
+    items: [
+      {
+        title: "美股科技股大崩盘：纳指跌入回调区间，2.5 万亿美元市值蒸发",
+        sourceName: "CNN Business",
+        sourceUrl:
+          "https://www.cnn.com/2026/11/05/investing/tech-heavy-nasdaq-plunges",
+        fact: "11 月 5 日标普500 跌 4.36%、纳指100 暴跌 6.36%，跌入技术性回调；民主党夺回国会后市场重新评估 AI 景气周期的可持续性，大型科技股遭大幅抛售。",
+        why: "这就是第 67 课『最大回撤』的现场版——你的组合里如果有美股科技仓位，今天感受的波动就是历史统计里那 −35%~-40% 回撤的组成部分。第 95 课的五问清单现在正该用上。",
+        category: "markets",
+        relatedLessons: [67, 95, 112],
+      },
+      {
+        title: "马斯克帝国两日蒸发 4200 亿美元，SpaceX 单日跌 9.17%",
+        sourceName: "CNBC / Yahoo Finance",
+        sourceUrl:
+          "https://www.cnn.com/2026/11/05/business/musk-texas-donations-midterms-spacex-tesla",
+        fact: "中期选举民主党在德州获胜后，SpaceX 11 月 5 日暴跌 9.17%至 $135.92 以下，Tesla 同步下跌；马斯克两家公司两日合计市值蒸发超 4200 亿美元，此前传闻的 SpaceX-Tesla 合并计划面临搁浅。",
+        why: "政治押注的代价还在持续——第 117 课的地缘政治传导链完整呈现：选举结果→政府合同不确定性→AI 基建审批收紧→股价重挫。如果你重仓了 SPCX/TSLA，这提醒你单一公司集中度风险（第 68 课）。",
+        category: "industry",
+        relatedLessons: [117, 68, 94],
+      },
+      {
+        title: "A 股逆势坚挺：中证500 涨 1.80%，与美股走势罕见分化",
+        sourceName: "Wind（本站市场快照）",
+        sourceUrl: "https://q.stock.sohu.com/zs/000001/index.shtml",
+        fact: "11 月 5 日收盘：上证50 +0.09%、沪深300 +0.29%、中证500 +1.80%；同日美股标普500 −4.36%、纳指100 −6.36%。两地走势罕见大幅分化。",
+        why: "A 股受中国央行降息支撑、美股受选举结果冲击——这正是第 90 课全球配置的核心价值：两地不相关时，全球组合的波动远小于单一市场满仓。",
+        category: "markets",
+        relatedLessons: [90, 68, 69],
+      },
+      {
+        title: "Anthropic IPO 在即：AI 安全与华尔街利益的碰撞",
+        sourceName: "CNN Business",
+        sourceUrl:
+          "https://www.cnn.com/2026/11/03/tech/anthropic-ipo-ai-safety",
+        fact: "Anthropic——以『安全优先』著称的 AI 公司——即将上市；其近 100 页的风险清单涵盖从生物武器到敲诈，引发市场对 AI 商业化与安全平衡的讨论。",
+        why: "AI 板块正处在关键转折：选举后监管可能收紧+估值高企+安全争议——第 146 课的『这次不一样』值得在追入 AI 主题基金前重读一遍。",
+        category: "industry",
+        relatedLessons: [146, 74, 55],
+      },
+    ],
+    calendar: [
+      "11 月 10 日（周二）：美国 10 月 CPI（北京时间 20:30/21:30）——数据好坏将决定暴跌后的市场走向",
+      "11 月 10 日：对华 25% 关税措施原定生效日",
+      "11 月 15 日：中国外汇存款准备金率上调正式实施",
+    ],
+  },
+  {
+    date: "2026-11-05",
+    headline:
+      "中国央行 3000 亿逆回购+降息双管齐下，A 股全线大涨；美股道指暴涨 1200 点庆祝民主党夺回国会；马斯克 5 亿美元选举豪赌惨败，SpaceX/Tesla 蒸发 1200 亿美元市值。",
+    items: [
+      {
+        title: "中国央行 3000 亿逆回购 + 下调再贷款利率至 1%",
+        sourceName: "新华财经 / 人民网",
+        sourceUrl: "https://m.cnfin.com/yw-lb//zixun/20261104/4491028_1.html",
+        fact: "央行 11 月 5 日开展 3000 亿元 3 个月买断式逆回购；同日起下调股票回购增持再贷款利率 0.25 个百分点至 1%，维护资本市场平稳运行。",
+        why: "双管齐下注入流动性+降低资金成本——这是第 102 课降息传导的完整版：债券受益、股票估值抬升、你的货基收益短期不受影响。",
+        category: "china",
+        relatedLessons: [102, 103, 58],
+      },
+      {
+        title: "美股道指暴涨 1200 点，民主党夺回国会获市场欢迎",
+        sourceName: "CNN Business",
+        sourceUrl:
+          "https://www.cnn.com/2026/11/04/investing/us-markets-midterm-elections",
+        fact: "道琼斯指数 11 月 4 日收涨 1200 点（+2%+），标普500 涨 1.58%，纳指100 涨 0.91%；市场解读民主党夺回国会为财政刺激可能加码的信号。",
+        why: "选举不确定性消除后市场反弹——但注意第 112 课的提醒：『国会分裂=财政博弈加剧』，长期通胀路径才是债市的关键变量。",
+        category: "markets",
+        relatedLessons: [112, 113, 55],
+      },
+      {
+        title: "马斯克 5 亿美元选举豪赌惨败，SpaceX/Tesla 蒸发 1200 亿",
+        sourceName: "Bloomberg / NYT",
+        sourceUrl:
+          "https://www.bloomberg.com/news/articles/2026-11-04/tesla-spacex-shares-take-early-hit-as-midterm-blue-wave-unfolds",
+        fact: "SpaceX 盘初跌 6.9%、Tesla 跌 5%；马斯克旗下公司合计蒸发超 1200 亿美元市值；他投入近 5 亿美元支持的共和党候选人多数落败，SpaceX-Tesla 合并计划也被打上问号。",
+        why: "这是第 117 课地缘政治影响市场的教科书案例——政治押注的代价直接反映在你的持仓上（如果你持有 SPCX 或 TSLA）。",
+        category: "industry",
+        relatedLessons: [117, 55, 94],
+      },
+      {
+        title: "CVS 宣布拆分为两家公司",
+        sourceName: "CNN Business",
+        sourceUrl:
+          "https://www.cnn.com/2026/11/04/business/cvs-to-split-into-two-companies",
+        fact: "CVS Health 宣布将其 1170 亿美元医疗帝国拆分为保险公司和药店零售两家独立上市公司。",
+        why: "大型企业拆分往往释放价值（第 162 课 WACC 的逻辑：不同业务的资本成本不同）；也提醒你持仓的行业基金可能面临成分股变动。",
+        category: "industry",
+        relatedLessons: [162, 79],
+      },
+      {
+        title: "A 股全线大涨，中证500 领涨 4.66%",
+        sourceName: "Wind（本站市场快照）",
+        sourceUrl: "https://q.stock.sohu.com/zs/000001/index.shtml",
+        fact: "11 月 4 日收盘：沪深300 +2.31%、中证500 +4.66%、上证50 +1.45%、恒生综合 +1.86%；美股同日也大涨（标普500 +1.58%）。",
+        why: "中美市场罕见同步上涨——中国靠降息、美国靠选举落地。但A股年内仍跌 11%+，美股涨 12%+——第 90 课的全球配置逻辑不变。",
+        category: "markets",
+        relatedLessons: [90, 68, 102],
       },
     ],
     calendar: [
