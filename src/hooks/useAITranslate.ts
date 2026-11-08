@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 const CACHE_PREFIX = "translation-cache-";
 
@@ -14,16 +14,9 @@ function hashStr(s: string): string {
 }
 
 export function useAITranslate() {
-  const [config, setConfig] = useState({ baseUrl: "", model: "" });
+  const configRef = useRef({ baseUrl: "http://localhost:11434/v1", model: "qwen2.5:7b" });
 
-  useEffect(() => {
-    setConfig({
-      baseUrl: "http://localhost:11434/v1",
-      model: "qwen2.5:7b",
-    });
-  }, []);
-
-  const translate = async (chineseText: string, lessonId: number, section: string): Promise<string> => {
+  const translate = useCallback(async (chineseText: string, lessonId: number, section: string): Promise<string> => {
     const cacheKey = `${CACHE_PREFIX}${lessonId}-${section}-${hashStr(chineseText.slice(0, 50))}`;
 
     // 检查缓存
@@ -33,7 +26,7 @@ export function useAITranslate() {
     } catch {}
 
     // 调用本地 Ollama 翻译
-    const systemPrompt = `You are a professional financial translator. Translate the following Chinese financial education content into clear, natural English. Keep all financial terms accurate (e.g., 复利 = compound interest, 最大回撤 = maximum drawdown, 资产配置 = asset allocation). Maintain the formatting (paragraphs, lists, bold text). Output ONLY the English translation, no explanations.`;
+    const systemPrompt = `You are a professional financial translator. Translate the following Chinese financial education content into clear, natural English. Keep all financial terms accurate. Maintain formatting. Output ONLY the English translation.`;
 
     try {
       const resp = await fetch("/api/chat", {
@@ -45,24 +38,23 @@ export function useAITranslate() {
             { role: "user", content: chineseText },
           ],
           apiKey: "ollama",
-          baseUrl: config.baseUrl,
-          model: config.model,
+          baseUrl: configRef.current.baseUrl,
+          model: configRef.current.model,
         }),
       });
 
       const data = await resp.json();
       if (data.reply) {
-        // 缓存翻译结果
         try {
           localStorage.setItem(cacheKey, data.reply);
         } catch {}
         return data.reply;
       }
-      return chineseText; // 翻译失败，返回原文
+      return chineseText;
     } catch {
       return chineseText;
     }
-  };
+  }, []);
 
   return { translate };
 }

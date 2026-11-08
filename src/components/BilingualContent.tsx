@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Markdown from "@/components/Markdown";
 import { useLang } from "@/hooks/useLang";
 import { useAITranslate } from "@/hooks/useAITranslate";
@@ -16,23 +16,34 @@ export default function BilingualContent({
 }) {
   const { lang } = useLang();
   const { translate } = useAITranslate();
+  const translateRef = useRef(translate);
+  translateRef.current = translate;
+
   const [translated, setTranslated] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);
 
-  // 英文模式下自动翻译（无需点击）
+  // 英文模式下自动翻译（仅触发一次）
   useEffect(() => {
-    if (lang !== "en" || translated) return;
+    if (lang !== "en" || translated || loading) return;
     let cancelled = false;
     setLoading(true);
-    translate(content, lessonId, section).then((result) => {
+    translateRef.current(content, lessonId, section).then((result) => {
       if (!cancelled) {
         setTranslated(result);
         setLoading(false);
       }
     });
     return () => { cancelled = true; };
-  }, [lang, content, lessonId, section, translated, translate]);
+  }, [lang]); // 只依赖 lang，不依赖 translate/content
+
+  // 中文模式重置
+  useEffect(() => {
+    if (lang === "zh") {
+      setTranslated(null);
+      setLoading(false);
+    }
+  }, [lang]);
 
   // 中文模式直接显示原文
   if (lang === "zh") {

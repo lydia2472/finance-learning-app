@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import type { QuizItem } from "@/data/lessons";
 import { useLang } from "@/hooks/useLang";
 import { useAITranslate } from "@/hooks/useAITranslate";
@@ -16,11 +16,14 @@ type TranslatedQuizItem = {
 function useQuizTranslation(items: QuizItem[], lessonId: number) {
   const { lang } = useLang();
   const { translate } = useAITranslate();
+  const translateRef = useRef(translate);
+  translateRef.current = translate;
+
   const [translated, setTranslated] = useState<TranslatedQuizItem[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (lang !== "en" || translated.length > 0) return;
+    if (lang !== "en" || translated.length > 0 || loading) return;
     let cancelled = false;
     setLoading(true);
 
@@ -29,10 +32,8 @@ function useQuizTranslation(items: QuizItem[], lessonId: number) {
       for (let i = 0; i < items.length; i++) {
         if (cancelled) return;
         const item = items[i];
-        // 将问题和选项拼成一段文本翻译
         const raw = `Question: ${item.question}\nOptions:\nA. ${item.options[0]}\nB. ${item.options[1]}\nC. ${item.options[2]}\nD. ${item.options[3]}\nCorrect answer: ${LETTERS[item.answer]}\nExplanation: ${item.explanation}`;
-        const result = await translate(raw, lessonId, `quiz-${i}`);
-        // 解析翻译结果
+        const result = await translateRef.current(raw, lessonId, `quiz-${i}`);
         const qMatch = result.match(/Question:\s*(.+?)(?:\n|$)/);
         const optMatches = [...result.matchAll(/([A-D])\.\s*(.+?)(?:\n|$)/g)];
         const expMatch = result.match(/Explanation:\s*(.+?)(?:\n|$)/);
@@ -51,7 +52,15 @@ function useQuizTranslation(items: QuizItem[], lessonId: number) {
     };
     translateAll();
     return () => { cancelled = true; };
-  }, [lang, items, lessonId, translated.length, translate]);
+  }, [lang]); // 只依赖 lang
+
+  // 中文模式重置
+  useEffect(() => {
+    if (lang === "zh") {
+      setTranslated([]);
+      setLoading(false);
+    }
+  }, [lang]);
 
   return { translated, loading };
 }
