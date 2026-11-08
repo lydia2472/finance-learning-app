@@ -18,9 +18,12 @@ export type Lesson = {
   difficulty: 1 | 2 | 3;
   minutes: number;
   intro: string;
-  explanation: string; // markdown
-  example: string; // markdown
+  explanation: string; // markdown（中文）
+  example: string; // markdown（中文）
+  explanationEn?: string; // markdown（英文，预写版本）
+  exampleEn?: string; // markdown（英文）
   quiz: QuizItem[];
+  quizEn?: QuizItem[]; // 英文版测验
   sources: SourceLink[];
 };
 
@@ -761,6 +764,17 @@ import { stage5 } from "./stage5";
 import { stage6 } from "./stage6";
 import { stage7 } from "./stage7";
 import { stage8 } from "./stage8";
+import { stage1En } from "./stage1-en";
+
+// 合并阶段 1 的英文内容
+for (const [id, en] of Object.entries(stage1En)) {
+  const lesson = stage1.lessons.find((l) => l.id === Number(id));
+  if (lesson) {
+    lesson.explanationEn = en.explanationEn;
+    lesson.exampleEn = en.exampleEn;
+    lesson.quizEn = en.quizEn;
+  }
+}
 
 export { stage2, stage3, stage4, stage5, stage6, stage7, stage8 };
 

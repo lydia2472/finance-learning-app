@@ -1,97 +1,34 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
 import Markdown from "@/components/Markdown";
 import { useLang } from "@/hooks/useLang";
-import { useAITranslate } from "@/hooks/useAITranslate";
 
 export default function BilingualContent({
-  content,
-  lessonId,
-  section,
+  contentZh,
+  contentEn,
+  className,
 }: {
-  content: string;
-  lessonId: number;
-  section: string;
+  contentZh: string;
+  contentEn?: string;
+  className?: string;
 }) {
   const { lang } = useLang();
-  const { translate } = useAITranslate();
-  const translateRef = useRef(translate);
-  translateRef.current = translate;
 
-  const [translated, setTranslated] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [showOriginal, setShowOriginal] = useState(false);
-
-  // 英文模式下自动翻译（仅触发一次）
-  useEffect(() => {
-    if (lang !== "en" || translated || loading) return;
-    let cancelled = false;
-    setLoading(true);
-    translateRef.current(content, lessonId, section).then((result) => {
-      if (!cancelled) {
-        setTranslated(result);
-        setLoading(false);
-      }
-    });
-    return () => { cancelled = true; };
-  }, [lang]); // 只依赖 lang，不依赖 translate/content
-
-  // 中文模式重置
-  useEffect(() => {
-    if (lang === "zh") {
-      setTranslated(null);
-      setLoading(false);
-    }
-  }, [lang]);
-
-  // 中文模式直接显示原文
-  if (lang === "zh") {
+  // 英文模式且有英文内容 → 直接显示英文（秒出）
+  if (lang === "en" && contentEn) {
     return (
       <Markdown
-        content={content}
-        className="prose prose-stone max-w-none prose-p:leading-relaxed prose-strong:text-stone-900"
+        content={contentEn}
+        className={className ?? "prose prose-stone max-w-none prose-p:leading-relaxed prose-strong:text-stone-900"}
       />
     );
   }
 
-  // 英文模式
+  // 否则显示中文
   return (
-    <div>
-      {loading && (
-        <div className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50/50 p-4">
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
-          <span className="text-sm text-emerald-700">Translating with AI…</span>
-        </div>
-      )}
-      {translated && !loading && (
-        <>
-          <Markdown
-            content={translated}
-            className="prose prose-stone max-w-none prose-p:leading-relaxed prose-strong:text-stone-900"
-          />
-          <button
-            onClick={() => setShowOriginal(!showOriginal)}
-            className="mt-3 text-xs font-medium text-stone-400 underline hover:text-stone-600"
-          >
-            {showOriginal ? "Hide Chinese original" : "Show Chinese original"}
-          </button>
-          {showOriginal && (
-            <div className="mt-3 rounded-xl border border-stone-200 bg-stone-50 p-4 opacity-70">
-              <Markdown
-                content={content}
-                className="prose prose-stone max-w-none prose-p:leading-relaxed"
-              />
-            </div>
-          )}
-        </>
-      )}
-      {!translated && !loading && (
-        <Markdown
-          content={content}
-          className="prose prose-stone max-w-none prose-p:leading-relaxed prose-strong:text-stone-900"
-        />
-      )}
-    </div>
+    <Markdown
+      content={contentZh}
+      className={className ?? "prose prose-stone max-w-none prose-p:leading-relaxed prose-strong:text-stone-900"}
+    />
   );
 }
