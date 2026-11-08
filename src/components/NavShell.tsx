@@ -5,7 +5,7 @@ import StreakBadge from "@/components/StreakBadge";
 import { LangProvider, useLang } from "@/hooks/useLang";
 
 function Shell({ children }: { children: React.ReactNode }) {
-  const { t, lang, toggle } = useLang();
+  const { t, lang, setLang } = useLang();
   return (
     <>
       <header className="sticky top-0 z-10 border-b border-stone-200 bg-white/90 backdrop-blur">
@@ -24,13 +24,15 @@ function Shell({ children }: { children: React.ReactNode }) {
             <Link href="/cfa-map" className="hidden text-stone-500 transition hover:text-stone-900 sm:inline">
               {t.navCfa}
             </Link>
-            <button
-              onClick={toggle}
-              className="rounded-full border border-stone-300 px-2.5 py-1 text-xs font-semibold text-stone-600 transition hover:border-emerald-400 hover:text-emerald-700"
-              title={lang === "zh" ? "Switch to English" : "切换到中文"}
+            <select
+              value={lang}
+              onChange={(e) => setLang(e.target.value as "zh" | "en")}
+              className="rounded-lg border border-stone-300 bg-white px-2 py-1.5 text-xs font-semibold text-stone-600 transition hover:border-emerald-400 focus:border-emerald-500 focus:outline-none"
+              title="Language / 语言"
             >
-              {lang === "zh" ? "EN" : "中"}
-            </button>
+              <option value="zh">🌐 中文</option>
+              <option value="en">🌐 English</option>
+            </select>
             <StreakBadge />
           </div>
         </div>

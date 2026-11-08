@@ -1,11 +1,12 @@
 # Daily Finance 📚
 
-A complete learning system that takes you from finance beginner to confident investor.
+A complete bilingual (English / 中文) learning system that takes you from finance beginner to confident investor.
 
 **[中文说明](README_CN.md)**
 
 ## Features
 
+- **Bilingual Support (English / 中文)**: Switch languages instantly via the dropdown in the navigation bar. Stage 1 (15 lessons) has full English content pre-written; remaining stages fall back to Chinese with English key terms.
 - **175 Complete Lessons**: 7 main stages + CFA elective track
   - Stage 1: Money Mindset & Financial Awakening (compound interest, inflation, budgeting, emergency fund)
   - Stage 2: Personal Financial Foundation (credit, debt, mortgage, currency exchange, taxes)

@@ -217,12 +217,14 @@ interface LangContextType {
   lang: Lang;
   t: Messages;
   toggle: () => void;
+  setLang: (lang: Lang) => void;
 }
 
 const LangContext = createContext<LangContextType>({
   lang: "zh",
   t: zh,
   toggle: () => {},
+  setLang: () => {},
 });
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
@@ -243,8 +245,15 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     } catch {}
   };
 
+  const setLangAndSave = (next: Lang) => {
+    setLang(next);
+    try {
+      localStorage.setItem(KEY, next);
+    } catch {}
+  };
+
   return (
-    <LangContext.Provider value={{ lang, t: messages[lang], toggle }}>
+    <LangContext.Provider value={{ lang, t: messages[lang], toggle, setLang: setLangAndSave }}>
       {children}
     </LangContext.Provider>
   );
