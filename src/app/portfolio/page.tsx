@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useLang } from "@/hooks/useLang";
 import {
   assetMeta,
   presets,
@@ -37,6 +38,7 @@ function fmt(n: number): string {
 }
 
 export default function PortfolioPage() {
+  const { lang } = useLang();
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [ready, setReady] = useState(false);
@@ -209,7 +211,7 @@ export default function PortfolioPage() {
             const up = q.chgPct >= 0;
             return (
               <div key={q.code} className="rounded-xl bg-white/10 p-3">
-                <div className="text-xs text-stone-300">{q.name}</div>
+                <div className="text-xs text-stone-300">{lang === "en" ? q.nameEn : q.name}</div>
                 <div className={`mt-1 text-lg font-bold ${up ? "text-rose-400" : "text-emerald-400"}`}>
                   {up ? "▲" : "▼"} {Math.abs(q.chgPct).toFixed(2)}%
                 </div>

@@ -13,6 +13,7 @@ export type Market = "CN" | "US" | "HK";
 export type MarketQuote = {
   code: string;
   name: string;
+  nameEn: string;
   market: Market;
   chgPct: number; // 当日涨跌幅 %
   ytdPct: number; // 年初至今涨跌幅 %
@@ -36,12 +37,12 @@ export const marketSnapshot = {
   asOf: "2026-11-06",
   source: "Wind",
   quotes: [
-    { code: "000016.SH", name: "上证50", market: "CN" as Market, chgPct: -0.84, ytdPct: -8.04 },
-    { code: "000300.SH", name: "沪深300", market: "CN" as Market, chgPct: -1.44, ytdPct: -12.43 },
-    { code: "000905.SH", name: "中证500", market: "CN" as Market, chgPct: -2.13, ytdPct: -11.63 },
-    { code: "SPX.GI", name: "标普500", market: "US" as Market, chgPct: 0.31, ytdPct: 7.76 },
-    { code: "NDX.GI", name: "纳斯达克100", market: "US" as Market, chgPct: 1.35, ytdPct: 6.89 },
-    { code: "HSCI.HI", name: "恒生综合", market: "HK" as Market, chgPct: -1.63, ytdPct: -9.8 },
+    { code: "000016.SH", name: "上证50", nameEn: "SSE 50", market: "CN" as Market, chgPct: -0.84, ytdPct: -8.04 },
+    { code: "000300.SH", name: "沪深300", nameEn: "CSI 300", market: "CN" as Market, chgPct: -1.44, ytdPct: -12.43 },
+    { code: "000905.SH", name: "中证500", nameEn: "CSI 500", market: "CN" as Market, chgPct: -2.13, ytdPct: -11.63 },
+    { code: "SPX.GI", name: "标普500", nameEn: "S&P 500", market: "US" as Market, chgPct: 0.31, ytdPct: 7.76 },
+    { code: "NDX.GI", name: "纳斯达克100", nameEn: "Nasdaq 100", market: "US" as Market, chgPct: 1.35, ytdPct: 6.89 },
+    { code: "HSCI.HI", name: "恒生综合", nameEn: "Hang Seng", market: "HK" as Market, chgPct: -1.63, ytdPct: -9.8 },
   ],
   valuations: [
     { code: "000016.SH", name: "上证50", peTtm: 11.65 },

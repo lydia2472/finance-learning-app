@@ -39,7 +39,7 @@ function EditionBlock({
               <span
                 className={`rounded-full px-2.5 py-1 text-xs font-semibold ${meta.chip}`}
               >
-                {meta.name}
+                {isEn ? meta.nameEn : meta.name}
               </span>
               <a
                 href={item.sourceUrl}
@@ -122,7 +122,7 @@ export default function NewsPage() {
         <div className="mt-3 flex flex-wrap gap-1.5">
           {Object.values(categoryMeta).map((m) => (
             <span key={m.name} className={`rounded-full px-2.5 py-1 text-xs font-semibold ${m.chip}`}>
-              {m.name}
+              {lang === "en" ? m.nameEn : m.name}
             </span>
           ))}
         </div>
@@ -135,7 +135,7 @@ export default function NewsPage() {
               const up = q.chgPct >= 0;
               return (
                 <span key={q.code} className="flex items-center gap-1.5">
-                  <span className="text-xs text-stone-400">{q.name}</span>
+                  <span className="text-xs text-stone-400">{lang === "en" ? q.nameEn : q.name}</span>
                   <span className={`font-semibold ${up ? "text-rose-400" : "text-emerald-400"}`}>
                     {up ? "+" : ""}{q.chgPct.toFixed(2)}%
                   </span>

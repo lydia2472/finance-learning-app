@@ -38,14 +38,14 @@ export type NewsEdition = {
 
 export const categoryMeta: Record<
   NewsCategory,
-  { name: string; chip: string }
+  { name: string; nameEn: string; chip: string }
 > = {
-  geopolitics: { name: "国际时政", chip: "bg-rose-100 text-rose-700" },
-  macro: { name: "宏观央行", chip: "bg-sky-100 text-sky-700" },
-  china: { name: "国内政策", chip: "bg-amber-100 text-amber-700" },
-  markets: { name: "市场行情", chip: "bg-emerald-100 text-emerald-700" },
-  ai: { name: "AI 科技", chip: "bg-violet-100 text-violet-700" },
-  industry: { name: "行业公司", chip: "bg-orange-100 text-orange-700" },
+  geopolitics: { name: "国际时政", nameEn: "Geopolitics", chip: "bg-rose-100 text-rose-700" },
+  macro: { name: "宏观央行", nameEn: "Macro & Central Banks", chip: "bg-sky-100 text-sky-700" },
+  china: { name: "国内政策", nameEn: "China Policy", chip: "bg-amber-100 text-amber-700" },
+  markets: { name: "市场行情", nameEn: "Markets", chip: "bg-emerald-100 text-emerald-700" },
+  ai: { name: "AI 科技", nameEn: "AI & Tech", chip: "bg-violet-100 text-violet-700" },
+  industry: { name: "行业公司", nameEn: "Industry", chip: "bg-orange-100 text-orange-700" },
 };
 
 export const editions: NewsEdition[] = [
