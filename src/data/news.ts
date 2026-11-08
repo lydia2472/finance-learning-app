@@ -45,6 +45,67 @@ export const categoryMeta: Record<
 
 export const editions: NewsEdition[] = [
   {
+    date: "2026-11-08",
+    headline:
+      "周末版：AI 恐慌强化分散投资价值；A 股受美股暴跌冲击回落但相对抗跌；OpenAI/Anthropic 支持英国强制 AI 监管；SpaceX/Tesla 连续第三天反弹。",
+    items: [
+      {
+        title: "AI 恐慌给投资者上了一课：分散投资",
+        sourceName: "CNN Business",
+        sourceUrl:
+          "https://www.cnn.com/2026/11/07/investing/ai-nerves-diversify-portfolio",
+        fact: "CNN 发表分析文章指出，本周科技股 2.5 万亿美元的抛售再次证明了分散投资的永恒价值——重仓 AI 或科技板块的投资者遭受了远超大盘的损失。",
+        why: "这正是我们课程第 68 课『分散投资：唯一的免费午餐』的现实教材——本周全球配置者的最大回撤远小于单一科技仓位持有者。如果你还没做分散，现在就是最好的时机。",
+        category: "markets",
+        relatedLessons: [68, 90, 70],
+      },
+      {
+        title: "A 股受美股暴跌冲击回落，但展现相对韧性",
+        sourceName: "Wind（本站市场快照）",
+        sourceUrl: "https://q.stock.sohu.com/zs/000001/index.shtml",
+        fact: "11 月 6 日（周五）收盘：上证50 −0.84%、沪深300 −1.44%、中证500 −2.13%；同日美股企稳反弹（标普500 +0.31%、纳指100 +1.35%、费半 +4.21%）。",
+        why: "A 股受隔夜美股暴跌影响低开回落，但跌幅远小于美股前日（纳指 −6.36%）——这正是两地不完全相关的证据（第 69 课），也是全球配置有效性的数学基础。",
+        category: "markets",
+        relatedLessons: [69, 90, 68],
+      },
+      {
+        title: "OpenAI 与 Anthropic 支持英国强制 AI 监管",
+        sourceName: "MLQ.ai",
+        sourceUrl:
+          "https://mlq.ai/news/openai-and-anthropic-split-with-rivals-over-binding-uk-ai-rules",
+        fact: "OpenAI 和 Anthropic 告知英国议员，前沿 AI 的自愿承诺应被强制要求取代，与反对强制监管的竞争对手分裂；美国 FTC 已对两家公司展开广泛调查；欧盟 AI 法案已于 8 月 2 日全面生效。",
+        why: "AI 监管趋严是确定性趋势——民主党夺回国会后可能加速美国 AI 立法。持有 AI 主题基金的人需要理解：监管是估值变量之一（第 146 课），过度集中的 AI 仓位正在被市场重新定价。",
+        category: "ai",
+        relatedLessons: [146, 55, 74],
+      },
+      {
+        title: "SpaceX/Tesla 连续第三天反弹，从暴跌中恢复",
+        sourceName: "Yahoo Finance",
+        sourceUrl:
+          "https://www.cnn.com/2026/11/05/business/musk-texas-donations-midterms-spacex-tesla",
+        fact: "SpaceX 本周暴跌 22% 后连续第三天上涨，TSLA 反弹 +4.57%；SPCX 已被纳入罗素 1000 和纳斯达克 100 指数，强制被动买盘提供了一定支撑。",
+        why: "纳入指数意味着指数基金必须买入——这是一种结构性的买盘来源（第 63 课指数化）。但单周 ±9% 的波动也提醒你 SPCX 的风险特征更接近单一公司而非分散指数（第 67 课）。",
+        category: "industry",
+        relatedLessons: [63, 67, 68],
+      },
+      {
+        title: "俄罗斯柴油即将运抵美国，制裁体系现裂缝",
+        sourceName: "CNN Business",
+        sourceUrl:
+          "https://www.cnn.com/2026/11/07/business/russian-diesel-us-sanctions-trump-intl",
+        fact: "一艘装载俄罗斯柴油的油轮正驶向美国东海岸——自 2022 年制裁以来首次，显示制裁体系出现松动。",
+        why: "制裁松动可能压低国际柴油价格，进而影响通胀路径——第 107 课的『成本推动型通胀』变量正在变化。持有能源相关资产的人需要关注（第 117 课地缘政治四通道）。",
+        category: "geopolitics",
+        relatedLessons: [107, 117, 116],
+      },
+    ],
+    calendar: [
+      "11 月 10 日（周二）：美国 10 月 CPI（北京时间 20:30/21:30）——本周最重要数据，决定 12 月 FOMC 是否加息",
+      "11 月 10 日：对华 25% 关税措施原定生效日",
+      "11 月 15 日：中国外汇存款准备金率上调正式实施",
+    ],
+  },
+  {
     date: "2026-11-07",
     headline:
       "特斯拉宣布停产 Cybertruck；SpaceX 暴跌后强劲反弹 9.37%；美国 10 月非农新增 16.5 万超预期；A 股回落、美股企稳。",

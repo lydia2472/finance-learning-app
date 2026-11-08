@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Markdown from "@/components/Markdown";
 import Quiz from "@/components/Quiz";
 import LessonChat from "@/components/LessonChat";
+import BilingualContent from "@/components/BilingualContent";
 import { getLesson, stageOf, allLessons } from "@/data/lessons";
 import { lessonCfaMap, topicName } from "@/data/cfa";
 import { useProgress } from "@/hooks/useProgress";
@@ -100,10 +101,7 @@ export default function LessonPage() {
           {t.conceptSection}
         </h2>
         <div className="rounded-2xl border border-stone-200 bg-white p-6">
-          <Markdown
-            content={lesson.explanation}
-            className="prose prose-stone max-w-none prose-p:leading-relaxed prose-strong:text-stone-900"
-          />
+          <BilingualContent content={lesson.explanation} lessonId={lesson.id} section="explanation" />
         </div>
       </section>
 
@@ -114,10 +112,7 @@ export default function LessonPage() {
           {t.exampleSection}
         </h2>
         <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-6">
-          <Markdown
-            content={lesson.example}
-            className="prose prose-stone max-w-none prose-p:leading-relaxed prose-table:text-sm"
-          />
+          <BilingualContent content={lesson.example} lessonId={lesson.id} section="example" />
         </div>
       </section>
 
