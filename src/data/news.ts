@@ -16,10 +16,13 @@ export type NewsCategory =
 
 export type NewsItem = {
   title: string;
+  titleEn?: string; // English title
   sourceName: string;
   sourceUrl: string;
   fact: string; // 发生了什么（一句话事实）
+  factEn?: string; // English fact
   why: string; // 为什么和你的钱包有关（小白解读）
+  whyEn?: string; // English why
   category: NewsCategory;
   relatedLessons?: number[]; // 关联课程 id（新闻 → 学习入口）
 };
@@ -27,8 +30,10 @@ export type NewsItem = {
 export type NewsEdition = {
   date: string; // YYYY-MM-DD
   headline: string; // 当日主线（一两句）
+  headlineEn?: string; // English headline
   items: NewsItem[];
   calendar?: string[]; // 今日/近期经济日历
+  calendarEn?: string[]; // English calendar
 };
 
 export const categoryMeta: Record<
@@ -48,53 +53,70 @@ export const editions: NewsEdition[] = [
     date: "2026-11-08",
     headline:
       "周末版：AI 恐慌强化分散投资价值；A 股受美股暴跌冲击回落但相对抗跌；OpenAI/Anthropic 支持英国强制 AI 监管；SpaceX/Tesla 连续第三天反弹。",
+    headlineEn:
+      "Weekend Edition: AI panic reinforces the value of diversification; A-shares fell on US crash but showed relative resilience; OpenAI/Anthropic back binding UK AI regulation; SpaceX/Tesla rebound for third straight day.",
     items: [
       {
         title: "AI 恐慌给投资者上了一课：分散投资",
+        titleEn: "AI panic teaches investors an age-old lesson: diversify",
         sourceName: "CNN Business",
         sourceUrl:
           "https://www.cnn.com/2026/11/07/investing/ai-nerves-diversify-portfolio",
         fact: "CNN 发表分析文章指出，本周科技股 2.5 万亿美元的抛售再次证明了分散投资的永恒价值——重仓 AI 或科技板块的投资者遭受了远超大盘的损失。",
+        factEn: "CNN analysis: this week's $2.5 trillion tech sell-off proves the timeless value of diversification — investors concentrated in AI/tech suffered losses far exceeding the broader market.",
         why: "这正是我们课程第 68 课『分散投资：唯一的免费午餐』的现实教材——本周全球配置者的最大回撤远小于单一科技仓位持有者。如果你还没做分散，现在就是最好的时机。",
+        whyEn: "This is the real-world textbook for Lesson 68 — globally diversified investors experienced far smaller drawdowns than concentrated tech holders. If you haven't diversified yet, now is the best time.",
         category: "markets",
         relatedLessons: [68, 90, 70],
       },
       {
         title: "A 股受美股暴跌冲击回落，但展现相对韧性",
+        titleEn: "A-shares fell on US crash impact but showed relative resilience",
         sourceName: "Wind（本站市场快照）",
         sourceUrl: "https://q.stock.sohu.com/zs/000001/index.shtml",
         fact: "11 月 6 日（周五）收盘：上证50 −0.84%、沪深300 −1.44%、中证500 −2.13%；同日美股企稳反弹（标普500 +0.31%、纳指100 +1.35%、费半 +4.21%）。",
+        factEn: "Nov 6 (Fri) close: SSE50 −0.84%, CSI300 −1.44%, CSI500 −2.13%; US markets rebounded same day (S&P500 +0.31%, Nasdaq100 +1.35%, Philly Semi +4.21%).",
         why: "A 股受隔夜美股暴跌影响低开回落，但跌幅远小于美股前日（纳指 −6.36%）——这正是两地不完全相关的证据（第 69 课），也是全球配置有效性的数学基础。",
+        whyEn: "A-shares fell far less than US markets did the previous day (Nasdaq −6.36%) — evidence of imperfect correlation (Lesson 69), the mathematical foundation of global allocation.",
         category: "markets",
         relatedLessons: [69, 90, 68],
       },
       {
         title: "OpenAI 与 Anthropic 支持英国强制 AI 监管",
+        titleEn: "OpenAI and Anthropic back binding UK AI regulation",
         sourceName: "MLQ.ai",
         sourceUrl:
           "https://mlq.ai/news/openai-and-anthropic-split-with-rivals-over-binding-uk-ai-rules",
         fact: "OpenAI 和 Anthropic 告知英国议员，前沿 AI 的自愿承诺应被强制要求取代，与反对强制监管的竞争对手分裂；美国 FTC 已对两家公司展开广泛调查；欧盟 AI 法案已于 8 月 2 日全面生效。",
+        factEn: "OpenAI and Anthropic told UK lawmakers that voluntary AI commitments should be replaced by binding requirements; the US FTC has opened investigations into both; the EU AI Act fully took effect Aug 2.",
         why: "AI 监管趋严是确定性趋势——民主党夺回国会后可能加速美国 AI 立法。持有 AI 主题基金的人需要理解：监管是估值变量之一（第 146 课），过度集中的 AI 仓位正在被市场重新定价。",
+        whyEn: "Tighter AI regulation is a certainty — Democratic control of Congress may accelerate US AI legislation. AI fund holders should understand: regulation is a valuation variable (Lesson 146).",
         category: "ai",
         relatedLessons: [146, 55, 74],
       },
       {
         title: "SpaceX/Tesla 连续第三天反弹，从暴跌中恢复",
+        titleEn: "SpaceX/Tesla rebound for third straight day after crash",
         sourceName: "Yahoo Finance",
         sourceUrl:
           "https://www.cnn.com/2026/11/05/business/musk-texas-donations-midterms-spacex-tesla",
         fact: "SpaceX 本周暴跌 22% 后连续第三天上涨，TSLA 反弹 +4.57%；SPCX 已被纳入罗素 1000 和纳斯达克 100 指数，强制被动买盘提供了一定支撑。",
+        factEn: "SpaceX rose for a third day after a 22% weekly crash; TSLA rebounded +4.57%. SPCX was added to the Russell 1000 and Nasdaq-100, providing passive buying support.",
         why: "纳入指数意味着指数基金必须买入——这是一种结构性的买盘来源（第 63 课指数化）。但单周 ±9% 的波动也提醒你 SPCX 的风险特征更接近单一公司而非分散指数（第 67 课）。",
+        whyEn: "Index inclusion means index funds must buy — a structural buying source (Lesson 63). But ±9% weekly swings remind you SPCX behaves more like a single stock than a diversified index (Lesson 67).",
         category: "industry",
         relatedLessons: [63, 67, 68],
       },
       {
         title: "俄罗斯柴油即将运抵美国，制裁体系现裂缝",
+        titleEn: "Russian diesel headed for US shores as sanctions show cracks",
         sourceName: "CNN Business",
         sourceUrl:
           "https://www.cnn.com/2026/11/07/business/russian-diesel-us-sanctions-trump-intl",
         fact: "一艘装载俄罗斯柴油的油轮正驶向美国东海岸——自 2022 年制裁以来首次，显示制裁体系出现松动。",
+        factEn: "A tanker carrying Russian diesel is heading for the US East Coast — the first since 2022 sanctions, showing the regime is loosening.",
         why: "制裁松动可能压低国际柴油价格，进而影响通胀路径——第 107 课的『成本推动型通胀』变量正在变化。持有能源相关资产的人需要关注（第 117 课地缘政治四通道）。",
+        whyEn: "Loosening sanctions could depress diesel prices, affecting the inflation path (Lesson 107 cost-push inflation). Energy asset holders should watch this (Lesson 117 geopolitics channel).",
         category: "geopolitics",
         relatedLessons: [107, 117, 116],
       },
@@ -103,6 +125,11 @@ export const editions: NewsEdition[] = [
       "11 月 10 日（周二）：美国 10 月 CPI（北京时间 20:30/21:30）——本周最重要数据，决定 12 月 FOMC 是否加息",
       "11 月 10 日：对华 25% 关税措施原定生效日",
       "11 月 15 日：中国外汇存款准备金率上调正式实施",
+    ],
+    calendarEn: [
+      "Nov 10 (Tue): US October CPI (Beijing 20:30/21:30) — the most important data this week",
+      "Nov 10: 25% China tariff measure originally scheduled to take effect",
+      "Nov 15: China FX reserve requirement hike takes effect",
     ],
   },
   {
