@@ -1,17 +1,69 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import type { QuizItem } from "@/data/lessons";
 import { useLang } from "@/hooks/useLang";
+import { useAITranslate } from "@/hooks/useAITranslate";
 
 const LETTERS = ["A", "B", "C", "D"];
+
+type TranslatedQuizItem = {
+  question: string;
+  options: string[];
+  explanation: string;
+};
+
+function useQuizTranslation(items: QuizItem[], lessonId: number) {
+  const { lang } = useLang();
+  const { translate } = useAITranslate();
+  const [translated, setTranslated] = useState<TranslatedQuizItem[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (lang !== "en" || translated.length > 0) return;
+    let cancelled = false;
+    setLoading(true);
+
+    const translateAll = async () => {
+      const results: TranslatedQuizItem[] = [];
+      for (let i = 0; i < items.length; i++) {
+        if (cancelled) return;
+        const item = items[i];
+        // 将问题和选项拼成一段文本翻译
+        const raw = `Question: ${item.question}\nOptions:\nA. ${item.options[0]}\nB. ${item.options[1]}\nC. ${item.options[2]}\nD. ${item.options[3]}\nCorrect answer: ${LETTERS[item.answer]}\nExplanation: ${item.explanation}`;
+        const result = await translate(raw, lessonId, `quiz-${i}`);
+        // 解析翻译结果
+        const qMatch = result.match(/Question:\s*(.+?)(?:\n|$)/);
+        const optMatches = [...result.matchAll(/([A-D])\.\s*(.+?)(?:\n|$)/g)];
+        const expMatch = result.match(/Explanation:\s*(.+?)(?:\n|$)/);
+        results.push({
+          question: qMatch?.[1]?.trim() ?? item.question,
+          options: optMatches.length >= 4
+            ? optMatches.slice(0, 4).map((m) => m[2].trim())
+            : item.options,
+          explanation: expMatch?.[1]?.trim() ?? item.explanation,
+        });
+      }
+      if (!cancelled) {
+        setTranslated(results);
+        setLoading(false);
+      }
+    };
+    translateAll();
+    return () => { cancelled = true; };
+  }, [lang, items, lessonId, translated.length, translate]);
+
+  return { translated, loading };
+}
 
 export default function Quiz({
   items,
   onFinish,
+  lessonId = 0,
 }: {
   items: QuizItem[];
   onFinish: (correct: number) => void;
+  lessonId?: number;
 }) {
   const [idx, setIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -19,8 +71,14 @@ export default function Quiz({
   const [finished, setFinished] = useState(false);
   const [done, setDone] = useState(false);
   const { t, lang } = useLang();
+  const { translated: translatedItems, loading: translating } = useQuizTranslation(items, lessonId);
 
   const item = items[idx];
+  const displayItem = lang === "en" && translatedItems[idx] ? translatedItems[idx] : null;
+  const questionText = displayItem?.question ?? item.question;
+  const optionsText = displayItem?.options ?? item.options;
+  const explanationText = displayItem?.explanation ?? item.explanation;
+
   const isLast = idx === items.length - 1;
   const correct = selected !== null && selected === item.answer;
 
@@ -46,8 +104,8 @@ export default function Quiz({
         </h3>
         <p className="mt-1 text-sm text-stone-500">
           {full
-            ? "全对！这个知识点你真的掌握了。"
-            : "错题的解析在上面，不妨回看一眼——错题会在之后的复习功能里再见到你。"}
+            ? (lang === "zh" ? "全对！这个知识点你真的掌握了。" : "Perfect score!")
+            : (lang === "zh" ? "错题的解析在上面，不妨回看一眼。" : "Check the explanations above.")}
         </p>
         {!done ? (
           <button
@@ -75,7 +133,9 @@ export default function Quiz({
           <span>
             {t.quizProgress} {idx + 1} / {items.length}
           </span>
-          <span>{lang === "zh" ? `答对 ${correctCount} 题` : `${correctCount} correct`}</span>
+          <span>
+            {lang === "zh" ? `答对 ${correctCount} 题` : `${correctCount} correct`}
+          </span>
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-stone-100">
           <div
@@ -85,10 +145,17 @@ export default function Quiz({
         </div>
       </div>
 
-      <h3 className="text-lg font-semibold leading-relaxed">{item.question}</h3>
+      {translating && lang === "en" && (
+        <div className="mb-4 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50/50 p-3">
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
+          <span className="text-sm text-emerald-700">Translating quiz…</span>
+        </div>
+      )}
+
+      <h3 className="text-lg font-semibold leading-relaxed">{questionText}</h3>
 
       <div className="mt-4 space-y-2.5">
-        {item.options.map((opt, i) => (
+        {optionsText.map((opt, i) => (
           <button
             key={i}
             disabled={selected !== null}
@@ -113,7 +180,7 @@ export default function Quiz({
           }`}
         >
           <span className="font-bold">{correct ? t.correct : t.wrong}</span>{" "}
-          {item.explanation}
+          {explanationText}
         </div>
       )}
 

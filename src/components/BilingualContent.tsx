@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Markdown from "@/components/Markdown";
 import { useLang } from "@/hooks/useLang";
 import { useAITranslate } from "@/hooks/useAITranslate";
@@ -20,6 +20,20 @@ export default function BilingualContent({
   const [loading, setLoading] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);
 
+  // 英文模式下自动翻译（无需点击）
+  useEffect(() => {
+    if (lang !== "en" || translated) return;
+    let cancelled = false;
+    setLoading(true);
+    translate(content, lessonId, section).then((result) => {
+      if (!cancelled) {
+        setTranslated(result);
+        setLoading(false);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [lang, content, lessonId, section, translated, translate]);
+
   // 中文模式直接显示原文
   if (lang === "zh") {
     return (
@@ -31,36 +45,28 @@ export default function BilingualContent({
   }
 
   // 英文模式
-  const handleTranslate = async () => {
-    setLoading(true);
-    const result = await translate(content, lessonId, section);
-    setTranslated(result);
-    setLoading(false);
-  };
-
   return (
     <div>
-      {/* 翻译按钮或翻译结果 */}
-      {translated ? (
+      {loading && (
+        <div className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50/50 p-4">
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
+          <span className="text-sm text-emerald-700">Translating with AI…</span>
+        </div>
+      )}
+      {translated && !loading && (
         <>
-          <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50/50 p-4">
-            <p className="mb-2 text-xs font-semibold text-emerald-700">
-              🌐 AI English Translation
-            </p>
-            <Markdown
-              content={translated}
-              className="prose prose-stone max-w-none prose-p:leading-relaxed prose-strong:text-stone-900"
-            />
-          </div>
-          {/* 显示/隐藏原文 */}
+          <Markdown
+            content={translated}
+            className="prose prose-stone max-w-none prose-p:leading-relaxed prose-strong:text-stone-900"
+          />
           <button
             onClick={() => setShowOriginal(!showOriginal)}
-            className="mb-3 text-xs font-medium text-stone-400 underline hover:text-stone-600"
+            className="mt-3 text-xs font-medium text-stone-400 underline hover:text-stone-600"
           >
             {showOriginal ? "Hide Chinese original" : "Show Chinese original"}
           </button>
           {showOriginal && (
-            <div className="rounded-xl border border-stone-200 bg-stone-50 p-4 opacity-70">
+            <div className="mt-3 rounded-xl border border-stone-200 bg-stone-50 p-4 opacity-70">
               <Markdown
                 content={content}
                 className="prose prose-stone max-w-none prose-p:leading-relaxed"
@@ -68,27 +74,12 @@ export default function BilingualContent({
             </div>
           )}
         </>
-      ) : (
-        <div>
-          <div className="rounded-2xl border border-stone-200 bg-white p-6">
-            <Markdown
-              content={content}
-              className="prose prose-stone max-w-none prose-p:leading-relaxed prose-strong:text-stone-900"
-            />
-          </div>
-          <button
-            onClick={handleTranslate}
-            disabled={loading}
-            className="mt-3 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50"
-          >
-            {loading ? "Translating…" : "🌐 Translate to English (AI)"}
-          </button>
-          {loading && (
-            <p className="mt-2 text-xs text-stone-400">
-              Using local Ollama AI — first translation may take 10-30 seconds
-            </p>
-          )}
-        </div>
+      )}
+      {!translated && !loading && (
+        <Markdown
+          content={content}
+          className="prose prose-stone max-w-none prose-p:leading-relaxed prose-strong:text-stone-900"
+        />
       )}
     </div>
   );

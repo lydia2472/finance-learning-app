@@ -124,6 +124,7 @@ export default function LessonPage() {
         </h2>
         <Quiz
           items={lesson.quiz}
+          lessonId={lesson.id}
           onFinish={() => {
             completeLesson(lesson.id);
             setAlreadyDone(true);
