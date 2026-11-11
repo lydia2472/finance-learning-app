@@ -3,12 +3,17 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useLang } from "@/hooks/useLang";
+import Markdown from "@/components/Markdown";
 import {
   assetMeta,
   presets,
   classAssumedRate,
+  holdingTypeMeta,
+  riskLevelMeta,
   type AssetClass,
   type Holding,
+  type HoldingType,
+  type RiskLevel,
 } from "@/data/portfolio";
 import { marketSnapshot } from "@/data/market";
 
@@ -47,11 +52,22 @@ export default function PortfolioPage() {
   const [presetIdx, setPresetIdx] = useState(0);
   const [customName, setCustomName] = useState("");
   const [amount, setAmount] = useState("");
+  const [holdingType, setHoldingType] = useState<HoldingType>("fund");
+  const [riskLevel, setRiskLevel] = useState<RiskLevel>("medium");
 
   useEffect(() => {
     try {
       const h = localStorage.getItem(HOLDINGS_KEY);
-      if (h) setHoldings(JSON.parse(h));
+      if (h) {
+        const parsed = JSON.parse(h) as Holding[];
+        // 兼容旧数据：补默认值
+        const migrated = parsed.map((item) => ({
+          ...item,
+          holdingType: item.holdingType ?? ("fund" as HoldingType),
+          riskLevel: item.riskLevel ?? ("medium" as RiskLevel),
+        }));
+        setHoldings(migrated);
+      }
       const s = localStorage.getItem(SETTINGS_KEY);
       if (s) setSettings({ ...DEFAULT_SETTINGS, ...JSON.parse(s) });
     } catch {
@@ -90,10 +106,26 @@ export default function PortfolioPage() {
     if (!name) return;
     persistHoldings([
       ...holdings,
-      { id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, name, asset, amount: amt },
+      {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        name,
+        asset,
+        holdingType,
+        riskLevel,
+        amount: amt,
+      },
     ]);
     setAmount("");
     setCustomName("");
+  };
+
+  // 选择预设时自动填充持有类型和风险等级
+  const onPresetChange = (idx: number) => {
+    setPresetIdx(idx);
+    if (idx < presets.length) {
+      setHoldingType(presets[idx].holdingType);
+      setRiskLevel(presets[idx].riskLevel);
+    }
   };
 
   const removeHolding = (id: string) =>
@@ -152,6 +184,82 @@ export default function PortfolioPage() {
 
   const fiTarget = settings.monthlySpend * 12 * 25;
   const neutral = scenarios.length === 3 ? scenarios[1] : null;
+
+  // ---- AI 组合评价 ----
+  const [aiResult, setAiResult] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+
+  const runAIEval = async () => {
+    if (!stats || aiLoading) return;
+    setAiLoading(true);
+    setAiResult(null);
+
+    const holdingLines = holdings.map((h) => {
+      const pct = ((h.amount / stats.total) * 100).toFixed(1);
+      return `- ${h.name}（${assetMeta[h.asset].name}，${holdingTypeMeta[h.holdingType].name}，${riskLevelMeta[h.riskLevel].name}）：${fmt(h.amount)} 元（${pct}%）`;
+    }).join("\n");
+
+    const diag = [
+      stats.equityPct > 0.8 ? `股票类占比 ${(stats.equityPct * 100).toFixed(0)}%（偏高，>80%）` : `股票类占比 ${(stats.equityPct * 100).toFixed(0)}%`,
+      stats.topGroup ? `最大市场集中度：${stats.topGroup.name} ${(stats.topGroup.pct * 100).toFixed(0)}%` : "",
+      stats.bufferPct === 0 ? "无债券和现金缓冲" : `债券+现金占比 ${(stats.bufferPct * 100).toFixed(0)}%`,
+    ].filter(Boolean).join("\n");
+
+    const prompt = `你是一位专业的理财顾问，基于以下投资组合数据给出评价和建议。请用中文回答，结构清晰，每个部分用 ## 开头。结尾加上免责声明。回答包含以下五个部分：
+
+## 1. 资产配置分析
+分析当前股债比、市场分散度、持有类型结构是否合理。
+
+## 2. 风险水平评估
+根据每笔持仓的风险等级和占比，评估整体风险水平，指出集中风险。
+
+## 3. 分散度评价
+评估组合在不同市场、不同资产类别间的分散程度。
+
+## 4. 潜在风险
+指出该组合可能面临的主要风险。
+
+## 5. 改进建议
+给出 2-3 条具体、可操作的建议。
+
+组合数据：
+- 总金额：${fmt(stats.total)} 元
+- 股票类占比：${(stats.equityPct * 100).toFixed(0)}%
+- 债券+现金占比：${(stats.bufferPct * 100).toFixed(0)}%
+
+持仓明细：
+${holdingLines}
+
+结构诊断：
+${diag}
+
+${histStats ? `历史统计（近10年月度数据）：加权年化 ${histStats.ret.toFixed(1)}%，加权最大回撤 ${histStats.mdd.toFixed(1)}%` : ""}`;
+
+    try {
+      const resp = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [
+            { role: "system", content: "你是一位专业的理财顾问和教育者，用通俗易懂的语言分析投资组合。所有内容仅为教育演示，不构成投资建议。" },
+            { role: "user", content: prompt },
+          ],
+          apiKey: "ollama",
+          baseUrl: "http://localhost:11434/v1",
+          model: "qwen2.5:7b",
+        }),
+      });
+      const data = await resp.json();
+      if (data.error) {
+        setAiResult(`⚠️ ${data.error}`);
+      } else {
+        setAiResult(data.reply);
+      }
+    } catch (e) {
+      setAiResult(`⚠️ 请求失败: ${e instanceof Error ? e.message : String(e)}`);
+    }
+    setAiLoading(false);
+  };
 
   // ---- Wind 数据派生 ----
   const quoteByCode = useMemo(() => {
@@ -238,7 +346,7 @@ export default function PortfolioPage() {
             标的
             <select
               value={presetIdx}
-              onChange={(e) => setPresetIdx(Number(e.target.value))}
+              onChange={(e) => onPresetChange(Number(e.target.value))}
               className="mt-1 block w-40 rounded-xl border border-stone-200 px-3 py-2 text-sm"
             >
               {presets.map((p, i) => (
@@ -260,6 +368,30 @@ export default function PortfolioPage() {
               />
             </label>
           )}
+          <label className="text-xs text-stone-500">
+            持有类型
+            <select
+              value={holdingType}
+              onChange={(e) => setHoldingType(e.target.value as HoldingType)}
+              className="mt-1 block w-28 rounded-xl border border-stone-200 px-3 py-2 text-sm"
+            >
+              {Object.entries(holdingTypeMeta).map(([k, v]) => (
+                <option key={k} value={k}>{v.name}</option>
+              ))}
+            </select>
+          </label>
+          <label className="text-xs text-stone-500">
+            风险等级
+            <select
+              value={riskLevel}
+              onChange={(e) => setRiskLevel(e.target.value as RiskLevel)}
+              className="mt-1 block w-28 rounded-xl border border-stone-200 px-3 py-2 text-sm"
+            >
+              <option value="low">低风险</option>
+              <option value="medium">中风险</option>
+              <option value="high">高风险</option>
+            </select>
+          </label>
           <label className="text-xs text-stone-500">
             持仓金额（元）
             <input
@@ -294,11 +426,17 @@ export default function PortfolioPage() {
               const up = quote ? quote.chgPct >= 0 : false;
               return (
                 <li key={h.id} className="flex items-center justify-between py-2.5 text-sm">
-                  <span className="flex items-center gap-2">
+                  <span className="flex flex-wrap items-center gap-1.5">
                     <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${assetMeta[h.asset].chip}`}>
                       {assetMeta[h.asset].name}
                     </span>
-                    <span className="font-medium">{h.name}</span>
+                    <span className="rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-500">
+                      {holdingTypeMeta[h.holdingType].name}
+                    </span>
+                    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${riskLevelMeta[h.riskLevel].chip}`}>
+                      {riskLevelMeta[h.riskLevel].name}
+                    </span>
+                    <span className="ml-1 font-medium">{h.name}</span>
                     {quote && (
                       <span className={`text-xs ${up ? "text-rose-500" : "text-emerald-600"}`}>
                         参考指数 {up ? "+" : ""}{quote.chgPct.toFixed(2)}%
@@ -403,6 +541,45 @@ export default function PortfolioPage() {
                 lessons={[96]}
               />
             )}
+          </section>
+
+          {/* AI 组合评价 */}
+          <section className="rounded-2xl border-2 border-violet-200 bg-violet-50/40 p-6">
+            <h2 className="font-bold text-violet-900">🤖 AI 组合评价</h2>
+            <p className="mt-1 text-xs text-stone-500">
+              基于你录入的持仓数据（类别、风险等级、金额、占比），由本地 AI 从金融知识角度给出分析和建议。
+            </p>
+            {!aiResult && !aiLoading && (
+              <button
+                onClick={runAIEval}
+                className="mt-3 rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-700"
+              >
+                🤖 开始 AI 评价
+              </button>
+            )}
+            {aiLoading && (
+              <div className="mt-4 flex items-center gap-3 rounded-xl border border-violet-200 bg-white p-4">
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-violet-500 border-t-transparent" />
+                <span className="text-sm text-violet-700">AI 正在分析你的组合…（约 10-30 秒）</span>
+              </div>
+            )}
+            {aiResult && !aiLoading && (
+              <div className="mt-4 rounded-xl border border-violet-200 bg-white p-5">
+                <Markdown
+                  content={aiResult}
+                  className="prose prose-stone max-w-none prose-p:leading-relaxed prose-headings:text-violet-800 prose-strong:text-stone-900"
+                />
+                <button
+                  onClick={() => { setAiResult(null); }}
+                  className="mt-4 rounded-lg border border-violet-300 px-4 py-2 text-xs font-medium text-violet-700 transition hover:bg-violet-50"
+                >
+                  重新评价
+                </button>
+              </div>
+            )}
+            <p className="mt-3 text-xs text-stone-400">
+              AI 评价由本地模型生成，仅为教育演示，不构成投资建议。实际决策请结合自身情况。
+            </p>
           </section>
 
           {/* 历史风险参考 */}
