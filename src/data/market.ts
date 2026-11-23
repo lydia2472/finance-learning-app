@@ -34,19 +34,20 @@ export type IndexRiskStats = {
 };
 
 export const marketSnapshot = {
-  asOf: "2026-11-17",
+  asOf: "2026-11-23",
   source: "Wind",
+  // A股/港股为 11-23 盘中快照；美股为 11-20（上周五）收盘
   quotes: [
-    { code: "000016.SH", name: "上证50", nameEn: "SSE 50", market: "CN" as Market, chgPct: 0.06, ytdPct: -8.67 },
-    { code: "000300.SH", name: "沪深300", nameEn: "CSI 300", market: "CN" as Market, chgPct: -0.08, ytdPct: -14.11 },
-    { code: "000905.SH", name: "中证500", nameEn: "CSI 500", market: "CN" as Market, chgPct: -0.23, ytdPct: -15.84 },
-    { code: "SPX.GI", name: "标普500", nameEn: "S&P 500", market: "US" as Market, chgPct: -1.03, ytdPct: 7.23 },
-    { code: "NDX.GI", name: "纳斯达克100", nameEn: "Nasdaq 100", market: "US" as Market, chgPct: -0.72, ytdPct: 6.94 },
-    { code: "HSCI.HI", name: "恒生综合", nameEn: "Hang Seng", market: "HK" as Market, chgPct: -1.03, ytdPct: -13.75 },
+    { code: "000016.SH", name: "上证50", nameEn: "SSE 50", market: "CN" as Market, chgPct: -1.62, ytdPct: -9.58 },
+    { code: "000300.SH", name: "沪深300", nameEn: "CSI 300", market: "CN" as Market, chgPct: -1.08, ytdPct: -15.51 },
+    { code: "000905.SH", name: "中证500", nameEn: "CSI 500", market: "CN" as Market, chgPct: -0.26, ytdPct: -19.76 },
+    { code: "SPX.GI", name: "标普500", nameEn: "S&P 500", market: "US" as Market, chgPct: -3.70, ytdPct: 0.95 },
+    { code: "NDX.GI", name: "纳斯达克100", nameEn: "Nasdaq 100", market: "US" as Market, chgPct: -5.61, ytdPct: -0.87 },
+    { code: "HSCI.HI", name: "恒生综合", nameEn: "Hang Seng", market: "HK" as Market, chgPct: -1.36, ytdPct: -19.10 },
   ],
   valuations: [
-    { code: "000016.SH", name: "上证50", peTtm: 11.81 },
-    { code: "000300.SH", name: "沪深300", peTtm: 13.43 },
+    { code: "000016.SH", name: "上证50", peTtm: 11.82 },
+    { code: "000300.SH", name: "沪深300", peTtm: 13.34 },
   ],
   // 基于 2016-10 至 2026-11 月度 K 线计算（价格口径；最大回撤含月内盘中）
   riskStats: [

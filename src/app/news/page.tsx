@@ -145,7 +145,7 @@ export default function NewsPage() {
             })}
           </div>
           <span className="shrink-0 text-[10px] text-stone-500">
-            Wind · {lang === "en" ? `Close of ${marketSnapshot.asOf}` : `${marketSnapshot.asOf} 收盘`}
+            Wind · {lang === "en" ? `As of ${marketSnapshot.asOf}` : `截至 ${marketSnapshot.asOf}`}
           </span>
         </div>
       </section>
