@@ -20,7 +20,7 @@ function EditionBlock({
     <article className="space-y-4">
       <header className="rounded-2xl bg-gradient-to-br from-stone-800 to-stone-900 p-6 text-white">
         <p className="text-xs font-medium tracking-wide text-stone-300">
-          {edition.date} · {isEn ? "Daily Financial Briefing" : "每日财经简报"}
+          {edition.date} · {isEn ? "Morning Brief · Yesterday & Overnight Review" : "晨报 · 昨日与隔夜回顾"}
         </p>
         <p className="mt-2 text-[15px] leading-relaxed">{headline}</p>
       </header>
@@ -116,8 +116,8 @@ export default function NewsPage() {
         <h1 className="mt-3 text-2xl font-bold sm:text-3xl">📰 {t.dailyBriefing}</h1>
         <p className="mt-2 text-sm leading-relaxed text-stone-500">
           {lang === "zh"
-            ? "每天早上 8 点由 AI 检索国内外真实新闻生成（五分类 + AI 科技），每条附『为什么和你的钱包有关』的解读与关联课程。"
-            : "Every morning at 8 AM, AI retrieves real news across 5 categories + AI Tech, with 'why it matters for your wallet' analysis and linked course lessons."}
+            ? "每天早上 8 点由 AI 检索国内外真实新闻生成（五分类 + AI 科技），每条附『为什么和你的钱包有关』的解读与关联课程。晨报覆盖昨日全天与隔夜美股——早 8 点 A 股尚未开盘，行情为上一交易日收盘数据。"
+            : "Every morning at 8 AM, AI retrieves real news across 5 categories + AI Tech, with 'why it matters for your wallet' analysis and linked course lessons. The morning brief covers yesterday plus overnight US markets — at 8 AM, A-shares have not yet opened, so quotes reflect the previous close."}
         </p>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {Object.values(categoryMeta).map((m) => (
@@ -144,7 +144,9 @@ export default function NewsPage() {
               );
             })}
           </div>
-          <span className="shrink-0 text-[10px] text-stone-500">Wind · {marketSnapshot.asOf}</span>
+          <span className="shrink-0 text-[10px] text-stone-500">
+            Wind · {lang === "en" ? `Close of ${marketSnapshot.asOf}` : `${marketSnapshot.asOf} 收盘`}
+          </span>
         </div>
       </section>
 
